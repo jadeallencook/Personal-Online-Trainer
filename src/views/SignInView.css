@@ -1,0 +1,38 @@
+.signin-wrapper {
+  background-color: #F8F9FA;
+  margin: 15px 0px;
+  padding: 25px 0px;
+}
+
+.create-account-btn,
+.signin-btn {
+  width: 100%;
+}
+
+.signin-btn {
+  margin-top: 10px;
+}
+
+.signin-header {
+  font-family: 'Staatliches', cursive;
+  text-align: center;
+  font-size: 3em;
+  margin-bottom: -10px;
+}
+
+.signin-subheader {
+  text-align: center;
+  font-size: 0.75em;
+}
+
+.gender-selection {
+  text-align: center;
+}
+
+.gender-selection > label {
+  margin: 0px 15px 15px 15px;
+}
+
+.gender-selection > label > input {
+  margin-right: 15px;
+}

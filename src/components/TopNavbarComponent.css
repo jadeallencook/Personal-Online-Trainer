@@ -1,0 +1,16 @@
+.navbar-brand {
+  font-family: 'Staatliches', cursive;
+}
+
+.navbar {
+  margin-top: 15px;
+}
+
+.navbar ul {
+  font-size: 0.75em;
+  align-items: center;
+}
+
+.navbar ul li {
+  cursor: pointer;
+}
