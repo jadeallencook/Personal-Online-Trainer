@@ -17,6 +17,8 @@ class ProfileComponent extends Component {
     };
   }
 
+  // workout
+
   toggleAvailbleDay(event) {
     const num = parseInt(event.target.getAttribute('data-val'));
     let array = this.state.workout.repeats;
@@ -49,13 +51,8 @@ class ProfileComponent extends Component {
       .then(this.resetWorkout.bind(this));
   }
 
-  updateWorkoutForm(event) {
-    const key = event.target.getAttribute('data-key');
-    let object = {};
-    object[key] = event.target.value;
-    this.setState(object)
-  }
-
+  
+  // firebase sync
   componentDidMount() {
     firebase.database().ref(`users/${firebase.auth().currentUser.uid}`).on('value', snapshot => {
       this.setState({
