@@ -7,9 +7,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: absolute;
-  height: 100%!important;
-  width: 100%!important;
-  background-color: #1c1c1c!important;
+  height: 100% !important;
+  width: 100% !important;
+  background-color: #1c1c1c !important;
 }
 
 code {
@@ -27,4 +27,61 @@ code {
 
 .btn {
   font-family: 'Staatliches', cursive;
+}
+
+.section-title {
+  font-family: 'Staatliches', cursive;
+  margin-top: -18px;
+  margin-bottom: 5px;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.section-description {
+  font-size: 0.5em;    
+  margin-bottom: -8px;
+  margin-top: 5px;
+}
+
+.delay-1 {
+  animation-delay: 100ms;
+}
+
+.delay-2 {
+  animation-delay: 300ms;
+}
+
+.delay-3 {
+  animation-delay: 500ms;
+}
+
+.delay-4 {
+  animation-delay: 700ms;
+}
+
+.delay-5 {
+  animation-delay: 900ms;
+}
+
+.delay-5 {
+  animation-delay: 1100ms;
+}
+
+.form-group > button,
+.full-width {
+  width: 100%;
+}
+
+td > button.option-btn {
+  width: 100%;
+  font-size: .80em;
+  margin-top: -2px;
+  padding: 2.5px 15px;
+}
+
+.full-width-placement {
+  height: 150px;
+  background-size: cover;
+  background-position: center center;
+  background-color: #CCC;
 }

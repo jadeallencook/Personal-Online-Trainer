@@ -80,10 +80,18 @@ class SignInView extends Component {
 
   signin(create) {
     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then((session) => {
-      if (create) {
-        firebase.database().ref(`users/personal/${session.user.uid}/`).set({
-          weight: this.state.weight,
-          height: this.state.height,
+      if (create === true && this.state.weight && this.state.height) {
+        const newDate = new Date(),
+              month = newDate.getUTCMonth() + 1,
+              day = newDate.getUTCDate() - 1,
+              year = newDate.getUTCFullYear(),
+              dateKey = `${month}-${day}-${year}`;
+        let weight = {};
+        weight[dateKey] = parseInt(this.state.weight);
+        weight.current = parseInt(this.state.weight);
+        firebase.database().ref(`users/${session.user.uid}/`).set({
+          weight: weight,
+          height: parseInt(this.state.height),
           gender: this.state.gender
         });
       }
@@ -101,49 +109,49 @@ class SignInView extends Component {
         {!this.state.signin ?
           <div className="row">
             <div className="col-12">
-              <h2 className="signin-header">LET'S GET FIT,</h2>
-              <p className="signin-subheader">Find the perfect fitness couch...</p>
+              <h2 className="signin-header animated tada">LET'S GET FIT!</h2>
+              <p className="signin-subheader animated fadeInUp delay-1">Find the perfect fitness coach...</p>
             </div>
             <div className="col-12">
               <div className="input-group mb-3">
-                <input type="text" className="form-control" placeholder="Email" name="email" value={this.state.email} onChange={this.validateUserSignup.bind(this)} />
+                <input type="email" className="form-control animated flipInX delay-1" placeholder="Email" name="email" value={this.state.email} onChange={this.validateUserSignup.bind(this)} />
               </div>
             </div>
             <div className="col-12">
               <div className="input-group mb-3">
-                <input type="password" className="form-control" placeholder="Password" name="password" value={this.state.password} onChange={this.validateUserSignup.bind(this)} />
+                <input type="password" className="form-control animated flipInX delay-1" placeholder="Password" name="password" value={this.state.password} onChange={this.validateUserSignup.bind(this)} />
               </div>
             </div>
             <div className="col-6">
               <div className="input-group mb-3">
-                <input type="number" className="form-control" placeholder="Weight (lbs)" name="weight" value={this.state.weight} onChange={this.validateUserSignup.bind(this)} />
+                <input type="number" className="form-control animated flipInX delay-1" placeholder="Weight (lbs)" name="weight" value={this.state.weight} onChange={this.validateUserSignup.bind(this)} />
               </div>
             </div>
             <div className="col-6">
               <div className="input-group mb-3">
-                <input type="number" className="form-control" placeholder="Height (inches)" name="height" value={this.state.height} onChange={this.validateUserSignup.bind(this)} />
+                <input type="number" className="form-control animated flipInX delay-1" placeholder="Height (inches)" name="height" value={this.state.height} onChange={this.validateUserSignup.bind(this)} />
               </div>
             </div>
-            <div className="col-6 gender-selection">
+            <div className="col-6 gender-selection animated flipInX delay-1">
               <label className="radio-inline"><input type="radio" name="gender" value="m" onChange={this.validateUserSignup.bind(this)} defaultChecked />Male</label>
             </div>
-            <div className="col-6 gender-selection">
+            <div className="col-6 gender-selection animated flipInX delay-1">
               <label className="radio-inline"><input type="radio" name="gender" value="f" onChange={this.validateUserSignup.bind(this)} />Female</label>
             </div>
           </div>
           :
           <div className="row">
             <div className="col-12">
-              <h2 className="signin-header">LET'S GET FIT,</h2>
-              <p className="signin-subheader">Find the perfect fitness couch...</p>
+              <h2 className="signin-header animated fadeIn">YOUR ACCOUNT</h2>
+              <p className="signin-subheader animated fadeIn delay-2">We're going to crush it...</p>
             </div>
             <div className="col-12">
-              <div className="input-group mb-3">
-                <input type="text" className="form-control" placeholder="Email" name="email" value={this.state.email} onChange={this.validateUserSignup.bind(this)} />
+              <div className="input-group mb-3 animated flipInX delay-1">
+                <input type="email" className="form-control" placeholder="Email" name="email" value={this.state.email} onChange={this.validateUserSignup.bind(this)} />
               </div>
             </div>
             <div className="col-12">
-              <div className="input-group mb-3">
+              <div className="input-group mb-3 animated flipInX delay-1">
                 <input type="password" className="form-control" placeholder="Password" name="password" value={this.state.password} onChange={this.validateUserSignup.bind(this)} />
               </div>
             </div>
@@ -156,12 +164,12 @@ class SignInView extends Component {
           null
         }
         <div className="col-12">
-          {!this.state.signin ? <button type="submit" className="create-account-btn btn btn-dark" onClick={this.createAccount.bind(this)}>Create Account</button> : null}
-          {this.state.signin ? <button type="submit" className="create-account-btn btn btn-dark" onClick={this.signinToggle.bind(this)}>Create Account</button> : null}
+          {!this.state.signin ? <button type="submit" className="create-account-btn btn btn-dark animated flipInX delay-2" onClick={this.createAccount.bind(this)}>Create Account</button> : null}
+          {this.state.signin ? <button type="submit" className="create-account-btn btn btn-dark animated flipInX delay-2" onClick={this.signinToggle.bind(this)}>Create Account</button> : null}
         </div>
         <div className="col-12">
-          {!this.state.signin ? <button type="submit" className="signin-btn btn btn-secondary" onClick={this.signinToggle.bind(this)}>Sign In</button> : null}
-          {this.state.signin ? <button type="submit" className="signin-btn btn btn-secondary" onClick={this.signin.bind(this)}>Sign In</button> : null}
+          {!this.state.signin ? <button type="submit" className="signin-btn btn btn-secondary animated flipInX delay-1" onClick={this.signinToggle.bind(this)}>Sign In</button> : null}
+          {this.state.signin ? <button type="submit" className="signin-btn btn btn-secondary animated flipInX delay-1" onClick={this.signin.bind(this)}>Sign In</button> : null}
         </div>
       </div>
     );

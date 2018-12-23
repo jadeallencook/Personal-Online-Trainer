@@ -1,0 +1,17 @@
+{
+    "workout": {
+        "title": "",
+        "repeats": [0, 0, 0, 0, 0, 0, 0],
+        "owner": null,
+        "calories": ""
+    },
+    "burned": {
+        "workout": "",
+        "calories": 0,
+        "timestamp": ""
+    },
+    "meal": {
+        "meal": "",
+        "calories": 0
+    }
+}

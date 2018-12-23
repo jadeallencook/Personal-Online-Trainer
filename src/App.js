@@ -17,7 +17,8 @@ class App extends Component {
     // set user state
     super();
     this.state = {
-      user: null
+      user: null,
+      authStateChecked: false
     }
     // configure and initialize firebase
     firebase.initializeApp({
@@ -31,7 +32,8 @@ class App extends Component {
     // update state on auth change
     firebase.auth().onAuthStateChanged(user => {
       this.setState({
-        user: user
+        user: user,
+        authStateChecked: true
       });
     });
   }
@@ -40,7 +42,9 @@ class App extends Component {
     return (
       <div className="App">
         <TopNavbarComponent />
-        {(this.state.user) ? <UserDashboardView /> : <SignInView />}
+        { (this.state.user) ? <UserDashboardView /> : null }
+        { (!this.state.user && this.state.authStateChecked) ? <SignInView /> : null }
+        }
         <FooterComponent />
       </div>
     );

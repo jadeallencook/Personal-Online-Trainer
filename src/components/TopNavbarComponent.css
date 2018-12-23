@@ -6,6 +6,10 @@
   margin-top: 15px;
 }
 
+.navbar-nav {
+  margin-left: auto;
+}
+
 .navbar ul {
   font-size: 0.75em;
   align-items: center;
