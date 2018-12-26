@@ -37,8 +37,16 @@ code {
   text-align: center;
 }
 
+.section-footer {
+  text-align: center;
+  display: block;
+  font-size: 0.5em;
+  margin-top: 15px;
+  margin-bottom: -15px;
+}
+
 .section-description {
-  font-size: 0.5em;    
+  font-size: 0.5em;
   margin-bottom: -8px;
   margin-top: 5px;
 }
@@ -67,12 +75,12 @@ code {
   animation-delay: 1100ms;
 }
 
-.form-group > button,
+.form-group>button,
 .full-width {
   width: 100%;
 }
 
-td > button.option-btn {
+td>button.option-btn {
   width: 100%;
   font-size: .80em;
   margin-top: -2px;

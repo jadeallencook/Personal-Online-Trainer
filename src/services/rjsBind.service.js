@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import merge from 'lodash/merge';
 
 export default function rjsBind(event) {
     const path = event.target.getAttribute('data-path'),
@@ -9,6 +9,6 @@ export default function rjsBind(event) {
         object[path] = idx === paths.length - 1 ? value : {};
         return [object[path], value];
     }, [object, value]);
-    object = _.merge(this.state, object);
+    object = merge(this.state, object);
     this.setState(() => object);
 }

@@ -1,22 +1,17 @@
 {
     "gender": "m",
     "height": 0,
-    "weight": {
-        "current": 0
-    },
+    "weight": 0,
     "trainer": null,
-    "water": {
-        "goal": 8,
-        "today": 0,
-        "history": {}
+    "workouts": {},
+    "history": {
+        "water": {},
+        "meals": {},
+        "weight": {},
+        "workouts": {}
     },
-    "burned": {
-        "today": 0
-    },
-    "calories": {
-        "limit": 0,
-        "today": 0,
-        "history": {}
-    },
-    "workouts": {}
+    "goals": {
+        "water": 8,
+        "calories": 0
+    }
 }
