@@ -19,7 +19,7 @@ class UserDashboardView extends Component {
 
   componentDidMount() {
     firebase.database().ref(`users/${firebase.auth().currentUser.uid}/workouts`).on('value', snapshot => {
-      const workoutKeys = Object.keys(snapshot.val());
+      const workoutKeys = (snapshot.val()) ? Object.keys(snapshot.val()) : [];
       let today = [];
       const day = (new Date().getDay()) ? new Date().getDay() - 1 : 6;
       workoutKeys.forEach(key => {
