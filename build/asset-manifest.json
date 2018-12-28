@@ -1,15 +1,15 @@
 {
-  "main.css": "/Personal-Online-Trainer/build/static/css/main.56bab061.chunk.css",
-  "main.js": "/Personal-Online-Trainer/build/static/js/main.b8ffade8.chunk.js",
-  "main.js.map": "/Personal-Online-Trainer/build/static/js/main.b8ffade8.chunk.js.map",
+  "main.css": "/Personal-Online-Trainer/build/static/css/main.c32e7b58.chunk.css",
+  "main.js": "/Personal-Online-Trainer/build/static/js/main.baa8d184.chunk.js",
+  "main.js.map": "/Personal-Online-Trainer/build/static/js/main.baa8d184.chunk.js.map",
   "static/css/1.971083ba.chunk.css": "/Personal-Online-Trainer/build/static/css/1.971083ba.chunk.css",
   "static/js/1.67291736.chunk.js": "/Personal-Online-Trainer/build/static/js/1.67291736.chunk.js",
   "static/js/1.67291736.chunk.js.map": "/Personal-Online-Trainer/build/static/js/1.67291736.chunk.js.map",
   "runtime~main.js": "/Personal-Online-Trainer/build/static/js/runtime~main.3bd58022.js",
   "runtime~main.js.map": "/Personal-Online-Trainer/build/static/js/runtime~main.3bd58022.js.map",
-  "static/css/main.56bab061.chunk.css.map": "/Personal-Online-Trainer/build/static/css/main.56bab061.chunk.css.map",
   "static/css/1.971083ba.chunk.css.map": "/Personal-Online-Trainer/build/static/css/1.971083ba.chunk.css.map",
+  "static/css/main.c32e7b58.chunk.css.map": "/Personal-Online-Trainer/build/static/css/main.c32e7b58.chunk.css.map",
   "index.html": "/Personal-Online-Trainer/build/index.html",
-  "precache-manifest.3aef3f26b728185f2da85bed79fa99a5.js": "/Personal-Online-Trainer/build/precache-manifest.3aef3f26b728185f2da85bed79fa99a5.js",
+  "precache-manifest.e39857452d662e1584587735e798042a.js": "/Personal-Online-Trainer/build/precache-manifest.e39857452d662e1584587735e798042a.js",
   "service-worker.js": "/Personal-Online-Trainer/build/service-worker.js"
 }
