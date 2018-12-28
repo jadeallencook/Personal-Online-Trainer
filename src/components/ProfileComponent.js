@@ -185,6 +185,14 @@ class ProfileComponent extends Component {
           ..._assign({}, this.state.user, snapshot.val()) 
         }
       });
+      if (!snapshot.val().workouts) {
+        this.setState({
+          user: {
+            ...this.state.user,
+            workouts: {}
+          }
+        })
+      }
     });
   }
 
