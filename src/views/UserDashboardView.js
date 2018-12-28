@@ -1,10 +1,76 @@
 import React, { Component } from 'react';
 import './UserDashboardView.css';
 import ProfileComponent from '../components/ProfileComponent';
+import firebase from 'firebase/app';
+import 'firebase/database';
+import 'firebase/auth';
+import datestamp from '../services/datestamp.service';
 var zipcodes = require('zipcodes');
 
 class UserDashboardView extends Component {
+
+  constructor() {
+    super();
+    this.state = {
+      workouts: {},
+      completed: {}
+    }
+  }
+
+  componentDidMount() {
+    firebase.database().ref(`users/${firebase.auth().currentUser.uid}/workouts`).on('value', snapshot => {
+      const workoutKeys = Object.keys(snapshot.val());
+      let today = [];
+      const day = (new Date().getDay()) ? new Date().getDay() - 1 : 6;
+      workoutKeys.forEach(key => {
+        if (!today[key]) {
+          const workout = snapshot.val()[key];
+          if (workout.repeats[day]) today[key] = workout;
+          else if (workout.repeats.reduce((a, b) => a + b, 0) === 0) today[key] = workout;
+        }
+      });
+      this.setState({
+        workouts: today
+      });
+    });
+
+    firebase.database().ref(`users/${firebase.auth().currentUser.uid}/history/workouts/${datestamp()}`).on('value', snapshot => {
+      this.setState({
+        completed: snapshot.val()
+      });
+    });
+  }
+
+  completeWorkout(uid) {
+    const workout = this.state.workouts[uid];
+    firebase.database()
+      .ref(`users/${firebase.auth().currentUser.uid}/history/workouts/${datestamp()}/${uid}`)
+      .set(workout)
+      .then(() => {
+        if (workout.repeats.reduce((a, b) => a + b, 0) === 0) {
+          firebase.database()
+            .ref(`users/${firebase.auth().currentUser.uid}/workouts/${uid}`)
+            .remove();
+        }
+      });
+  }
+
+  undoWorkout(uid) {
+    const workout = this.state.completed[uid];
+    firebase.database()
+      .ref(`users/${firebase.auth().currentUser.uid}/history/workouts/${datestamp()}/${uid}`)
+      .remove()
+      .then(() => {
+        if (workout.repeats.reduce((a, b) => a + b, 0) === 0) {
+          firebase.database()
+            .ref(`users/${firebase.auth().currentUser.uid}/workouts/${uid}`)
+            .set(workout);
+        }
+      })
+  }
+
   render() {
+
     return (
       <div className="UserDashboardView">
 
@@ -19,18 +85,36 @@ class UserDashboardView extends Component {
             <div className="col-12">
               <h2 className="section-title animated slideInDown">TODAY'S WORKOUTS</h2>
             </div>
-            <div className="col-12 animated flipInX delay-2 todo-list-item-wrapper">
-              <div className="alert alert-secondary todo-list-item" role="alert">
-                100 Pushups
-                <button type="button" className="btn btn-dark" data-toggle="modal" data-target="#exampleModal">COMPLETE</button>
-              </div>
-            </div>
-            <div className="col-12 animated flipInX delay-2 todo-list-item-wrapper">
-              <div className="alert alert-success todo-list-item" role="alert">
-                Run 1 Mile
-                <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">UNDO</button>
-              </div>
-            </div>
+            {
+              (this.state.workouts) ?
+              Object.keys(this.state.workouts).map(key => {
+                const workout = this.state.workouts[key];
+                if (!this.state.completed || Object.keys(this.state.completed).indexOf(key) === -1) {
+                  return (
+                    <div className="col-12 animated flipInX delay-2 todo-list-item-wrapper" key={key}>
+                      <div className="alert alert-secondary todo-list-item" role="alert">
+                        {workout.title}
+                        <button type="button" className="btn btn-dark" onClick={() => this.completeWorkout.bind(this)(key)}>COMPLETE</button>
+                      </div>
+                    </div>
+                  )
+                }
+              }) : null
+            }
+            {
+              (this.state.completed) ?
+              Object.keys(this.state.completed).map(key => {
+                const workout = this.state.completed[key];
+                return (
+                  <div className="col-12 animated flipInX delay-2 todo-list-item-wrapper" key={key}>
+                    <div className="alert alert-success todo-list-item" role="alert">
+                      {workout.title}
+                      <button type="button" className="btn btn-secondary" onClick={() => this.undoWorkout.bind(this)(key)}>UNDO</button>
+                    </div>
+                  </div>
+                )
+              }) : null
+            }
           </div>
         </div>
 
