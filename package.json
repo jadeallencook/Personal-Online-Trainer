@@ -2,6 +2,7 @@
   "name": "personal-online-trainer",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://jadeallencook.github.io/Personal-Online-Trainer/build/",
   "dependencies": {
     "animate.css": "^3.7.0",
     "bootstrap": "^4.1.3",
