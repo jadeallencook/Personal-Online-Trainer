@@ -11,8 +11,8 @@ import 'firebase/database';
 
 class ProfileComponent extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       user: JSON.parse(JSON.stringify(user.default)),
       workout: JSON.parse(JSON.stringify(models.default.workout)),
@@ -56,7 +56,7 @@ class ProfileComponent extends Component {
       }
     });
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/workouts/`)
+      .ref(`users/${this.props.AuthUID}/workouts/`)
       .push(this.state.workout)
       .then(this.setState({
         workout: JSON.parse(JSON.stringify(models.default.workout))
@@ -65,7 +65,7 @@ class ProfileComponent extends Component {
 
   removeWorkout(uid) {
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/workouts/${uid}`)
+      .ref(`users/${this.props.AuthUID}/workouts/${uid}`)
       .remove()
       .then(this.setState({ workout: JSON.parse(JSON.stringify(models.default.workout)) }));
   }
@@ -73,7 +73,7 @@ class ProfileComponent extends Component {
   // weight 
   removeWeight(uid) {
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/history/weight/${uid}`)
+      .ref(`users/${this.props.AuthUID}/history/weight/${uid}`)
       .remove()
       .then(this.setState({ weight: '' }));
   }
@@ -83,11 +83,11 @@ class ProfileComponent extends Component {
       weight: parseInt(this.state.weight)
     });
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/weight`)
+      .ref(`users/${this.props.AuthUID}/weight`)
       .set(parseInt(this.state.weight))
       .then(() => {
         firebase.database()
-          .ref(`users/${firebase.auth().currentUser.uid}/history/weight/${datestamp()}`)
+          .ref(`users/${this.props.AuthUID}/history/weight/${datestamp()}`)
           .set(parseInt(this.state.weight))
           .then(() =>{
             this.setState({
@@ -100,7 +100,7 @@ class ProfileComponent extends Component {
   // height
   updateHeight() {
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/height`)
+      .ref(`users/${this.props.AuthUID}/height`)
       .set(parseInt(this.state.height))
       .then(this.setState({ height: '' }));
   }
@@ -114,20 +114,20 @@ class ProfileComponent extends Component {
       }
     });
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/history/meals/${datestamp()}`)
+      .ref(`users/${this.props.AuthUID}/history/meals/${datestamp()}`)
       .push(this.state.meal)
       .then(this.setState({ meal: { calories: '', title: ''}}));
   }
 
   removeMeal(uid) {
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/history/meals/${datestamp()}/${uid}`)
+      .ref(`users/${this.props.AuthUID}/history/meals/${datestamp()}/${uid}`)
       .remove();
   }
 
   setCaloriesLimit() {
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/goals/calories`)
+      .ref(`users/${this.props.AuthUID}/goals/calories`)
       .set(parseInt(this.state.calories.limit))
       .then(this.setState({ calories: { limit: '' } }));
   }
@@ -141,14 +141,14 @@ class ProfileComponent extends Component {
       }
     });
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/history/workouts/${datestamp()}`)
+      .ref(`users/${this.props.AuthUID}/history/workouts/${datestamp()}`)
       .push(this.state.burned)
       .then(this.setState({ burned: { calories: '', title: ''}}));
   }
 
   removeBurned(uid) {
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/history/workouts/${datestamp()}/${uid}`)
+      .ref(`users/${this.props.AuthUID}/history/workouts/${datestamp()}/${uid}`)
       .remove();
   }
 
@@ -158,27 +158,27 @@ class ProfileComponent extends Component {
     let time = new Date();
     time = `${time.getHours()}:${time.getMinutes()}`;
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/history/water/${datestamp()}/${time}`)
+      .ref(`users/${this.props.AuthUID}/history/water/${datestamp()}/${time}`)
       .set(this.state.water.drink)
       .then(this.setState({ water: { drink: '' }}));
   }
 
   removeDrink(time) {
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/history/water/${datestamp()}/${time}`)
+      .ref(`users/${this.props.AuthUID}/history/water/${datestamp()}/${time}`)
       .remove();
   }
 
   setWaterGoal() {
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/goals/water`)
+      .ref(`users/${this.props.AuthUID}/goals/water`)
       .set(parseInt(this.state.water.goal))
       .then(this.setState({ water: { goal: '' }}));
   }
   
   // firebase sync
   componentDidMount() {
-    firebase.database().ref(`users/${firebase.auth().currentUser.uid}`).on('value', snapshot => {
+    firebase.database().ref(`users/${this.props.AuthUID}`).on('value', snapshot => {
       this.setState({
         user: { 
           goals: {},
@@ -212,14 +212,15 @@ class ProfileComponent extends Component {
                       <th scope="col">OPTIONS</th>
                     </tr>
                   </thead>
+                  <tbody>
                   {
                     (
-                      validate(this.state.user.workouts)
+                      validate(this.state.user.workouts) &&
+                      Object.keys(this.state.user.workouts).length
                     ) ?
                     Object.keys(this.state.user.workouts).reverse().map(key => {
                         return (
-                          <tbody key={key}>
-                            <tr>
+                            <tr key={key}>
                               <th scope="row">{ this.state.user.workouts[key].title }</th>
                               <td>
                               { 
@@ -242,10 +243,16 @@ class ProfileComponent extends Component {
                                 this.removeWorkout(key);
                               }}>Remove</button></td>
                             </tr>
-                          </tbody>
                         );
-                      }) : null
+                      }) : (
+                        <tr>
+                          <th scope="row" colSpan="3">
+                            <center>You haven't setup anything workouts!</center>
+                          </th>
+                        </tr>
+                      )
                   }
+                  </tbody>
                 </table>
               </div>
               <div className="modal-header">
@@ -298,6 +305,7 @@ class ProfileComponent extends Component {
                   </thead>
                   {
                     (
+                      this.state.user.history &&
                       validate(this.state.user.history.weight)
                     ) ?
                     Object.keys(this.state.user.history.weight).reverse().map(key => {
@@ -369,33 +377,32 @@ class ProfileComponent extends Component {
                       <th scope="col">OPTIONS</th>
                     </tr>
                   </thead>
-                  {
-                    (
-                      validate(this.state.user.history.meals) && 
-                      validate(this.state.user.history.meals[datestamp()])
-                    ) ?
-                      Object.keys(this.state.user.history.meals[datestamp()]).reverse().map(key => {
-                        const meal = this.state.user.history.meals[datestamp()][key];
-                        return (
-                          <tbody key={key}>
-                            <tr>
+                  <tbody>
+                    {
+                      (
+                        this.state.user.history &&
+                        validate(this.state.user.history.meals) && 
+                        validate(this.state.user.history.meals[datestamp()])
+                      ) ?
+                        Object.keys(this.state.user.history.meals[datestamp()]).reverse().map(key => {
+                          const meal = this.state.user.history.meals[datestamp()][key];
+                          return (
+                            <tr key={key}>
                               <th scope="row">{meal.title}</th>
                               <td>{meal.calories}</td>
                               <td><button type="button" className="btn btn-danger option-btn" onClick={() => this.removeMeal(key)}>Remove</button></td>
                             </tr>
-                          </tbody>
-                        )
-                      })
-                    : (
-                      <tbody>
+                          )
+                        })
+                      : (
                         <tr>
                           <th scope="row" colSpan="3">
                             <center>You haven't eaten anything today!</center>
                           </th>
                         </tr>
-                      </tbody>
-                    )
-                  }
+                      )
+                    }
+                  </tbody>
                 </table>
               </div>
               <div className="modal-header">
@@ -439,6 +446,7 @@ class ProfileComponent extends Component {
                   <tbody>
                   {
                     (
+                      this.state.user.history &&
                       validate(this.state.user.history.workouts) && 
                       validate(this.state.user.history.workouts[datestamp()])
                     ) ?
@@ -502,6 +510,7 @@ class ProfileComponent extends Component {
                   <tbody>
                     {
                       (
+                        this.state.user.history && 
                         validate(this.state.user.history.water) && 
                         validate(this.state.user.history.water[datestamp()])
                       ) ?
@@ -590,6 +599,8 @@ class ProfileComponent extends Component {
               <label className="animated fadeInDown delay-2">CALORIES</label>
               { 
                 (
+                  this.state.user.goals && 
+                  this.state.user.history &&
                   validate(this.state.user.goals.calories, 'number') && 
                   validate(this.state.user.history.meals) && 
                   validate(this.state.user.history.meals[datestamp()])
@@ -613,6 +624,7 @@ class ProfileComponent extends Component {
               <button type="button" className="btn btn-dark animated flipInX delay-2" data-toggle="modal" data-target="#burned-modal">
                 { 
                   (
+                    this.state.user.history && 
                     validate(this.state.user.history.workouts) && 
                     validate(this.state.user.history.workouts[datestamp()])
                   ) ? 
@@ -633,13 +645,13 @@ class ProfileComponent extends Component {
               <label className="animated fadeInDown delay-2">WATER</label>
               {
                 (
+                  this.state.user.history && 
                   validate(this.state.user.history.water) && 
                   validate(this.state.user.history.water[datestamp()])
                 ) ? 
                 function () {
-                  if (!this.state.user.goals.water) this.setState({ user: { goals: { water: 8 }}});
                   const drinks = this.state.user.history.water[datestamp()];
-                  const goal = this.state.user.goals.water;
+                  const goal = (this.state.user.goals || this.state.user.goals.water) ? this.state.user.goals.water : 8;
                   let sum = 0;
                   Object.keys(drinks).map(key => {
                     sum += parseInt(drinks[key]);

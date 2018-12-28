@@ -10,8 +10,8 @@ var zipcodes = require('zipcodes');
 
 class UserDashboardView extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       workouts: {},
       completed: {}
@@ -19,11 +19,11 @@ class UserDashboardView extends Component {
   }
 
   componentDidMount() {
-    firebase.database().ref(`users/${firebase.auth().currentUser.uid}/workouts`).on('value', snapshot => {
-      const workoutKeys = (snapshot.val()) ? Object.keys(snapshot.val()) : [];
+    firebase.database().ref(`users/${this.props.AuthUID}/workouts`).on('value', snapshot => {
+      const keys = (snapshot.val()) ? Object.keys(snapshot.val()) : [];
       let today = [];
       const day = (new Date().getDay()) ? new Date().getDay() - 1 : 6;
-      workoutKeys.forEach(key => {
+      keys.forEach(key => {
         if (!today[key]) {
           const workout = snapshot.val()[key];
           if (workout.repeats[day]) today[key] = workout;
@@ -34,8 +34,7 @@ class UserDashboardView extends Component {
         workouts: today
       });
     });
-
-    firebase.database().ref(`users/${firebase.auth().currentUser.uid}/history/workouts/${datestamp()}`).on('value', snapshot => {
+    firebase.database().ref(`users/${this.props.AuthUID}/history/workouts/${datestamp()}`).on('value', snapshot => {
       this.setState({
         completed: snapshot.val()
       });
@@ -45,12 +44,12 @@ class UserDashboardView extends Component {
   completeWorkout(uid) {
     const workout = this.state.workouts[uid];
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/history/workouts/${datestamp()}/${uid}`)
+      .ref(`users/${this.props.AuthUID}/history/workouts/${datestamp()}/${uid}`)
       .set(workout)
       .then(() => {
         if (workout.repeats.reduce((a, b) => a + b, 0) === 0) {
           firebase.database()
-            .ref(`users/${firebase.auth().currentUser.uid}/workouts/${uid}`)
+            .ref(`users/${this.props.AuthUID}/workouts/${uid}`)
             .remove();
         }
       });
@@ -59,12 +58,12 @@ class UserDashboardView extends Component {
   undoWorkout(uid) {
     const workout = this.state.completed[uid];
     firebase.database()
-      .ref(`users/${firebase.auth().currentUser.uid}/history/workouts/${datestamp()}/${uid}`)
+      .ref(`users/${this.props.AuthUID}/history/workouts/${datestamp()}/${uid}`)
       .remove()
       .then(() => {
         if (workout.repeats.reduce((a, b) => a + b, 0) === 0) {
           firebase.database()
-            .ref(`users/${firebase.auth().currentUser.uid}/workouts/${uid}`)
+            .ref(`users/${this.props.AuthUID}/workouts/${uid}`)
             .set(workout);
         }
       })
@@ -75,7 +74,7 @@ class UserDashboardView extends Component {
     return (
       <div className="UserDashboardView">
 
-        <ProfileComponent></ProfileComponent>
+        <ProfileComponent AuthUID={this.props.AuthUID}></ProfileComponent>
         
         <div className="container animated flipInX full-width-placement" style={{
           backgroundImage: 'url(http://www.muscleandstrength.com/store/media/products/products/c/c4banner1.jpg)'

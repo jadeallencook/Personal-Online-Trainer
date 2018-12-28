@@ -18,8 +18,7 @@ class App extends Component {
     super();
     this.state = {
       user: null,
-      authStateChecked: false,
-      create: false
+      created: false
     }
     // configure and initialize firebase
     firebase.initializeApp({
@@ -32,13 +31,19 @@ class App extends Component {
     });
     // update state on auth change
     firebase.auth().onAuthStateChanged(user => {
-      this.setState({
-        user: user,
-        authStateChecked: true
-      });
       if (user) {
-        firebase.database().ref(`users/${this.state.user.uid}`).on('value', snapshot => {
-          if (snapshot.val()) this.setState({ created: true });
+        firebase.database().ref(`users/${user.uid}/gender`).once('value', snapshot => {
+          if (snapshot.val()) {
+            this.setState({
+              user: user,
+              created: snapshot.val()
+            });
+          }
+        });
+      } else {
+        this.setState({
+          user: null,
+          created: false
         });
       }
     });
@@ -48,8 +53,10 @@ class App extends Component {
     return (
       <div className="App">
         <TopNavbarComponent />
-        { (this.state.user && this.state.created) ? <UserDashboardView /> : null }
-        { (!this.state.user && this.state.authStateChecked) ? <SignInView /> : null }
+        { 
+          (this.state.user && this.state.created) ? 
+          <UserDashboardView AuthUID={this.state.user.uid} Profile={this.state.created} /> : 
+          <SignInView /> 
         }
         <FooterComponent />
       </div>
