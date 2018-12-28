@@ -1,15 +1,15 @@
 {
-  "main.css": "/static/css/main.547393a4.chunk.css",
-  "main.js": "/static/js/main.3be31ba4.chunk.js",
-  "main.js.map": "/static/js/main.3be31ba4.chunk.js.map",
-  "static/css/1.971083ba.chunk.css": "/static/css/1.971083ba.chunk.css",
-  "static/js/1.e15fdbb5.chunk.js": "/static/js/1.e15fdbb5.chunk.js",
-  "static/js/1.e15fdbb5.chunk.js.map": "/static/js/1.e15fdbb5.chunk.js.map",
-  "runtime~main.js": "/static/js/runtime~main.229c360f.js",
-  "runtime~main.js.map": "/static/js/runtime~main.229c360f.js.map",
-  "static/css/1.971083ba.chunk.css.map": "/static/css/1.971083ba.chunk.css.map",
-  "static/css/main.547393a4.chunk.css.map": "/static/css/main.547393a4.chunk.css.map",
-  "index.html": "/index.html",
-  "precache-manifest.cf9c44c1a05465d52a3998c4b75abf09.js": "/precache-manifest.cf9c44c1a05465d52a3998c4b75abf09.js",
-  "service-worker.js": "/service-worker.js"
+  "main.css": "/Personal-Online-Trainer/build/static/css/main.f3085314.chunk.css",
+  "main.js": "/Personal-Online-Trainer/build/static/js/main.d6a09953.chunk.js",
+  "main.js.map": "/Personal-Online-Trainer/build/static/js/main.d6a09953.chunk.js.map",
+  "static/css/1.971083ba.chunk.css": "/Personal-Online-Trainer/build/static/css/1.971083ba.chunk.css",
+  "static/js/1.03e1ef28.chunk.js": "/Personal-Online-Trainer/build/static/js/1.03e1ef28.chunk.js",
+  "static/js/1.03e1ef28.chunk.js.map": "/Personal-Online-Trainer/build/static/js/1.03e1ef28.chunk.js.map",
+  "runtime~main.js": "/Personal-Online-Trainer/build/static/js/runtime~main.3bd58022.js",
+  "runtime~main.js.map": "/Personal-Online-Trainer/build/static/js/runtime~main.3bd58022.js.map",
+  "static/css/main.f3085314.chunk.css.map": "/Personal-Online-Trainer/build/static/css/main.f3085314.chunk.css.map",
+  "static/css/1.971083ba.chunk.css.map": "/Personal-Online-Trainer/build/static/css/1.971083ba.chunk.css.map",
+  "index.html": "/Personal-Online-Trainer/build/index.html",
+  "precache-manifest.78741724b763e52ae53d47625e5618a7.js": "/Personal-Online-Trainer/build/precache-manifest.78741724b763e52ae53d47625e5618a7.js",
+  "service-worker.js": "/Personal-Online-Trainer/build/service-worker.js"
 }
