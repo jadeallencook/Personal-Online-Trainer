@@ -4,6 +4,7 @@ import * as user from '../models/user.model';
 import * as models from '../models/profile.model';
 import rjsBind from '../services/rjsBind.service';
 import datestamp from '../services/datestamp.service';
+import validate from '../services/validate.service';
 import _assign from 'lodash/assign';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
@@ -212,14 +213,17 @@ class ProfileComponent extends Component {
                     </tr>
                   </thead>
                   {
-                    (this.state.user.workouts) ?
+                    (
+                      validate(this.state.user.workouts)
+                    ) ?
                     Object.keys(this.state.user.workouts).reverse().map(key => {
                         return (
                           <tbody key={key}>
                             <tr>
                               <th scope="row">{ this.state.user.workouts[key].title }</th>
                               <td>
-                              { (this.state.user.workouts[key].repeats.reduce((a, b) => a + b, 0) === 7) ? 
+                              { 
+                                (this.state.user.workouts[key].repeats.reduce((a, b) => a + b, 0) === 7) ? 
                                 'Everyday' : 
                                 this.state.user.workouts[key].repeats.map((val, i) => {
                                     if (i === 0 && val) return 'M ';
@@ -293,7 +297,9 @@ class ProfileComponent extends Component {
                     </tr>
                   </thead>
                   {
-                    (this.state.user.history.weight) ?
+                    (
+                      validate(this.state.user.history.weight)
+                    ) ?
                     Object.keys(this.state.user.history.weight).reverse().map(key => {
                       return (
                         <tbody key={key}>
@@ -323,7 +329,12 @@ class ProfileComponent extends Component {
               </div>
               <div className="modal-body">
                 <p>BMI is calculated by using your current weight and height, try keeping it between 20 and 30.</p>
-                <p>Your height is set to: <b>{this.state.user.height} inches</b></p>
+                <p>Your height is set to: <b>
+                  {
+                    (
+                      validate(this.state.user.height, 'number')
+                    ) ? `${this.state.user.height} inche(s)` : `nothing...`
+                  }</b></p>
                 <div className="row">
                   <div className="col-6"><input type="number" className="form-control" id="height" data-path="height" value={this.state.height} onChange={event => rjsBind.bind(this, event)()} placeholder="Inches" /></div>
                   <div className="col-6"><button type="button" className="btn btn-dark full-width" onClick={this.updateHeight.bind(this)} disabled={!this.state.height}>Save Height</button></div>
@@ -359,7 +370,10 @@ class ProfileComponent extends Component {
                     </tr>
                   </thead>
                   {
-                    (this.state.user.history.meals && this.state.user.history.meals[datestamp()]) ?
+                    (
+                      validate(this.state.user.history.meals) && 
+                      validate(this.state.user.history.meals[datestamp()])
+                    ) ?
                       Object.keys(this.state.user.history.meals[datestamp()]).reverse().map(key => {
                         const meal = this.state.user.history.meals[datestamp()][key];
                         return (
@@ -424,7 +438,10 @@ class ProfileComponent extends Component {
                   </thead>
                   <tbody>
                   {
-                    (this.state.user.history.workouts && this.state.user.history.workouts[datestamp()]) ?
+                    (
+                      validate(this.state.user.history.workouts) && 
+                      validate(this.state.user.history.workouts[datestamp()])
+                    ) ?
                       Object.keys(this.state.user.history.workouts[datestamp()]).reverse().map(key => {
                         const workout = this.state.user.history.workouts[datestamp()][key];
                         return (
@@ -460,7 +477,15 @@ class ProfileComponent extends Component {
                 </button>
               </div>
               <div className="modal-body">
-                <p>This is how much water you've consumed today. You're current daily water consumtion goal is <b>{(this.state.user.goals.water) ? this.state.user.goals.water : 8}</b> ounce(s).</p>
+                <p>
+                  This is how much water you've consumed today. You're current daily water consumtion goal is <b>
+                    {
+                      (validate(this.state.user.goals.water, 'number')) ? 
+                      this.state.user.goals.water : 
+                      8
+                    }
+                  </b> ounce(s).
+                </p>
                 <div className="row">
                   <div className="col-6"><input type="number" className="form-control" id="water-drink" data-path="water-drink" value={this.state.water.drink} onChange={event => rjsBind.bind(this, event)()} placeholder="Ounce(s)" /></div>
                   <div className="col-6"><button type="button" className="btn btn-dark full-width" disabled={!this.state.water.drink} onClick={this.addWater.bind(this)}>ADD DRINK</button></div>
@@ -476,7 +501,10 @@ class ProfileComponent extends Component {
                   </thead>
                   <tbody>
                     {
-                      (this.state.user.history.water && this.state.user.history.water[datestamp()]) ?
+                      (
+                        validate(this.state.user.history.water) && 
+                        validate(this.state.user.history.water[datestamp()])
+                      ) ?
                         Object.keys(this.state.user.history.water[datestamp()]).reverse().map(time => {
                           const drink = this.state.user.history.water[datestamp()][time];
                           let timestamp = time.split(':');
@@ -528,15 +556,30 @@ class ProfileComponent extends Component {
             </div>
             <div className="col-4 stat-container">
               <label className="animated fadeInDown delay-1">WORKOUTS</label>
-              <button type="button" className="btn btn-dark animated flipInX delay-1" data-toggle="modal" data-target="#tasks-modal">{ Object.keys(this.state.user.workouts).length }</button>
+              <button type="button" className="btn btn-dark animated flipInX delay-1" data-toggle="modal" data-target="#tasks-modal">
+                { 
+                  (validate(this.state.user.workouts)) ? 
+                  Object.keys(this.state.user.workouts).length : 
+                  0 
+                }
+              </button>
             </div><div className="col-4 stat-container">
               <label className="animated fadeInDown delay-1">WEIGHT</label>
-              <button type="button" className="btn btn-dark animated flipInX delay-1" data-toggle="modal" data-target="#weight-modal">{ this.state.user.weight }</button>
+              <button type="button" className="btn btn-dark animated flipInX delay-1" data-toggle="modal" data-target="#weight-modal">
+                { 
+                  validate(this.state.user.weight, 'number') ? 
+                  this.state.user.weight : 
+                  0 
+                }
+              </button>
             </div><div className="col-4 stat-container">
               <label className="animated fadeInDown delay-1">BMI</label>
               <button type="button" className="btn btn-success animated flipInX delay-1" data-toggle="modal" data-target="#bmi-modal">
               { 
-                (this.state.user.weight && this.state.user.height) ? 
+                (
+                  validate(this.state.user.weight, 'number') && 
+                  validate(this.state.user.height, 'number')
+                ) ? 
                 Math.round((this.state.user.weight * 703) / (this.state.user.height * this.state.user.height)) :
                 'ERROR'
               }
@@ -546,7 +589,11 @@ class ProfileComponent extends Component {
             <div className="col-4 stat-container">
               <label className="animated fadeInDown delay-2">CALORIES</label>
               { 
-                (this.state.user.goals.calories && this.state.user.history.meals && this.state.user.history.meals[datestamp()]) ?
+                (
+                  validate(this.state.user.goals.calories, 'number') && 
+                  validate(this.state.user.history.meals) && 
+                  validate(this.state.user.history.meals[datestamp()])
+                ) ?
                 function() {
                   let sum = 0;
                   const meals = this.state.user.history.meals[datestamp()];
@@ -565,7 +612,10 @@ class ProfileComponent extends Component {
               <label className="animated fadeInDown delay-2">BURNED</label>
               <button type="button" className="btn btn-dark animated flipInX delay-2" data-toggle="modal" data-target="#burned-modal">
                 { 
-                  (this.state.user.history.workouts && this.state.user.history.workouts[datestamp()]) ? 
+                  (
+                    validate(this.state.user.history.workouts) && 
+                    validate(this.state.user.history.workouts[datestamp()])
+                  ) ? 
                   function() {
                     const workouts = this.state.user.history.workouts[datestamp()];
                     let sum = 0;
@@ -582,7 +632,10 @@ class ProfileComponent extends Component {
             </div><div className="col-4 stat-container">
               <label className="animated fadeInDown delay-2">WATER</label>
               {
-                (this.state.user.history.water && this.state.user.history.water[datestamp()]) ? 
+                (
+                  validate(this.state.user.history.water) && 
+                  validate(this.state.user.history.water[datestamp()])
+                ) ? 
                 function () {
                   if (!this.state.user.goals.water) this.setState({ user: { goals: { water: 8 }}});
                   const drinks = this.state.user.history.water[datestamp()];

@@ -18,7 +18,8 @@ class App extends Component {
     super();
     this.state = {
       user: null,
-      authStateChecked: false
+      authStateChecked: false,
+      create: false
     }
     // configure and initialize firebase
     firebase.initializeApp({
@@ -35,6 +36,11 @@ class App extends Component {
         user: user,
         authStateChecked: true
       });
+      if (user) {
+        firebase.database().ref(`users/${this.state.user.uid}`).on('value', snapshot => {
+          if (snapshot.val()) this.setState({ created: true });
+        });
+      }
     });
   }
   
@@ -42,7 +48,7 @@ class App extends Component {
     return (
       <div className="App">
         <TopNavbarComponent />
-        { (this.state.user) ? <UserDashboardView /> : null }
+        { (this.state.user && this.state.created) ? <UserDashboardView /> : null }
         { (!this.state.user && this.state.authStateChecked) ? <SignInView /> : null }
         }
         <FooterComponent />

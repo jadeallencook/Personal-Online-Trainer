@@ -5,6 +5,7 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/auth';
 import datestamp from '../services/datestamp.service';
+import validate from '../services/validate.service';
 var zipcodes = require('zipcodes');
 
 class UserDashboardView extends Component {
@@ -86,7 +87,10 @@ class UserDashboardView extends Component {
               <h2 className="section-title animated slideInDown">TODAY'S WORKOUTS</h2>
             </div>
             {
-              (this.state.workouts) ?
+              (
+                validate(this.state.workouts) && 
+                Object.keys(this.state.workouts).length
+              ) ?
               Object.keys(this.state.workouts).map(key => {
                 const workout = this.state.workouts[key];
                 if (!this.state.completed || Object.keys(this.state.completed).indexOf(key) === -1) {
@@ -99,7 +103,11 @@ class UserDashboardView extends Component {
                     </div>
                   )
                 }
-              }) : null
+              }) : 
+                <div className="col-12 animated flipInX delay-2 todo-list-item-wrapper">
+                  <span className="section-footer">You don't have any workouts setup yet!</span>
+                  <br /><br />
+                </div>
             }
             {
               (this.state.completed) ?

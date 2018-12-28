@@ -3,6 +3,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 import './SignInView.css';
+import datestamp from '../services/datestamp.service';
 
 class SignInView extends Component {
 
@@ -64,8 +65,22 @@ class SignInView extends Component {
     } else if (this.state.height < 48) {
       this.displayError('Height is set incorrectly.');
     } else {
-      firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(() => {
-        this.signin(true);
+      firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then((session) => {
+        let weightHistory = {};
+        const weight = parseInt(this.state.weight);
+        weightHistory[datestamp()] = weight;
+        firebase.database().ref(`users/${session.user.uid}`).set({
+          weight: weight,
+          history: {
+            weight: weightHistory
+          },
+          height: parseInt(this.state.height),
+          gender: this.state.gender
+        }).then(() => {
+          this.signin();
+        }).catch((error) => {
+          console.error(error);
+        });
       }).catch(error => {
         this.displayError(error.message);
       })
@@ -78,27 +93,8 @@ class SignInView extends Component {
     });
   }
 
-  signin(create) {
-    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then((session) => {
-      if (create === true && this.state.weight && this.state.height) {
-        const newDate = new Date(),
-              month = newDate.getUTCMonth() + 1,
-              day = newDate.getUTCDate() - 1,
-              year = newDate.getUTCFullYear(),
-              dateKey = `${month}-${day}-${year}`;
-        let weight = {};
-        weight[dateKey] = parseInt(this.state.weight);
-        weight.current = parseInt(this.state.weight);
-        firebase.database().ref(`users/${session.user.uid}/`).set({
-          weight: weight,
-          height: parseInt(this.state.height),
-          gender: this.state.gender
-        });
-      }
-      this.setState({
-        password: ''
-      });
-    }).catch((error) => {
+  signin() {
+    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch((error) => {
       this.displayError(error.message);
     })
   }
