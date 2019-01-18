@@ -181,18 +181,11 @@ class ProfileComponent extends Component {
     firebase.database().ref(`users/${this.props.AuthUID}`).on('value', snapshot => {
       this.setState({
         user: { 
+          workouts: {},
           goals: {},
           ..._assign({}, this.state.user, snapshot.val()) 
         }
       });
-      if (!snapshot.val().workouts) {
-        this.setState({
-          user: {
-            ...this.state.user,
-            workouts: {}
-          }
-        })
-      }
     });
   }
 

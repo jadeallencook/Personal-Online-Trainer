@@ -1,0 +1,20 @@
+{
+    "name": "",
+    "about": "",
+    "zipcode": null,
+    "gym-buddy": {
+        "description": "Let's workout together!",
+        "rate": null,
+        "message": ""
+    },
+    "workout-plan": {
+        "description": "",
+        "rate": null,
+        "message": ""
+    },
+    "meal-plan": {
+        "description": "",
+        "rate": null,
+        "message": ""
+    }
+}
